@@ -1,0 +1,11 @@
+{
+  "clients": [
+    {
+      "id": "DEMO_CLIENT_001",
+      "name": "Demo Client",
+      "email": "client@example.com",
+      "product": "iran_monitor",
+      "active": true
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+# Secrets — never commit
+.env
+.env.*
+!.env.example
+
+# Generated pipeline output
+output/json/*.json
+output/docx/
+output/pdf/
+output/md/
+output/html/
+logs/
+
+# Keep the manifest placeholder
+!output/json/manifest.json
+
+# Python bytecode
+__pycache__/
+*.pyc
+*.pyo
+
+# Node
+node_modules/
+
+# OS
+.DS_Store
+*.swp
+*~

@@ -1,0 +1,222 @@
+{
+  "_COMMENT_TOP": "ThreatWatch AI Brief Template. Copy and rename this file for each new brief. _COMMENT keys are ignored by the renderer.",
+
+  "cfg": {
+    "_COMMENT": "Cover page metadata",
+    "productName":    "ThreatWatch AI",
+    "eventTitle":     "EVENT NAME / OPERATION NAME",
+    "dayLabel":       "DAY 1",
+    "date":           "Month DD, YYYY",
+    "updateTime":     "Morning ET",
+    "classification": "Open-source intelligence only  |  Not for redistribution",
+    "audience":       "Security/executive leadership, travel, supply chain, business continuity",
+    "outputFile":     "./output/brief_output.docx"
+  },
+
+  "sourceRegistry": {
+    "_COMMENT": "Add event-specific source IDs here. Built-in IDs (CENTCOM, IDF, REUTERS, etc.) never need registration.",
+    "EXAMPLE_SRC": { "tier": 1, "label": "Example Official Statement via Press Conference" }
+  },
+
+  "execSummary": [
+    {
+      "_COMMENT": "Position 1: Most important CONFIRMED development. 2-3 sentences. State what happened and its operational implication.",
+      "type": "fact",
+      "text": "REPLACE: Most important confirmed development and its immediate operational implication in 2-3 sentences.",
+      "conf": "HIGH",
+      "sources": ["REUTERS", "AP"]
+    },
+    {
+      "_COMMENT": "Position 2: Second confirmed development.",
+      "type": "fact",
+      "text": "REPLACE: Second confirmed development and its immediate implication.",
+      "conf": "HIGH",
+      "sources": ["CNN"]
+    },
+    {
+      "_COMMENT": "Position 3: Most likely near-term trajectory (assessment, not fact).",
+      "type": "assessment",
+      "text": "REPLACE: Most likely near-term trajectory based on available evidence. State the basis.",
+      "conf": "MED",
+      "sources": ["CSIS"]
+    },
+    {
+      "_COMMENT": "Position 4: Customer-facing operational risk assessment.",
+      "type": "assessment",
+      "text": "REPLACE: The primary operational risk for the target audience (travel, supply chain, cyber, etc.).",
+      "conf": "MED",
+      "sources": []
+    },
+    {
+      "_COMMENT": "Position 5: Single most important unresolved variable. Name the fork in the road. No conf/sources needed.",
+      "type": "uncertainty",
+      "text": "REPLACE: The single most important unresolved question. What are the two possible outcomes and what observable event resolves it?"
+    }
+  ],
+
+  "sections": [
+    {
+      "_COMMENT": "Standard order: Leadership/Political → Military → Infrastructure/Travel → International Reactions. Add/remove as needed.",
+      "domainTitle": "Leadership / Political Situation",
+      "items": [
+        {
+          "type": "h3",
+          "text": "Sub-topic Header"
+        },
+        {
+          "_COMMENT": "Primary content block. One development per claim.",
+          "type": "claim",
+          "text": "REPLACE: The specific development. Who did what, when, where, according to whom.",
+          "conf": "HIGH",
+          "sources": ["REUTERS", "AP"]
+        },
+        {
+          "_COMMENT": "Use evidenceBox for 2-4 highest-stakes claims that will be challenged. Teal-bordered provenance box.",
+          "type": "evidenceBox",
+          "claim": "Short restatement of the specific claim being documented.",
+          "rows": [
+            { "label": "Source",        "value": "Who reported this and where" },
+            { "label": "Who said it",   "value": "Named official or named outlet" },
+            { "label": "Date/time",     "value": "When the statement or event occurred" },
+            { "label": "Basis/quote",   "value": "Exact quote or stated factual basis", "quote": true },
+            { "label": "Counter-check", "value": "Any conflicting account" },
+            { "label": "Confidence",    "value": "Why HIGH/MED/LOW and what would change this rating" }
+          ]
+        },
+        {
+          "_COMMENT": "factJudge: two-column table. Teal = confirmed facts, Purple = analyst judgments. Place at end of major subsection.",
+          "type": "factJudge",
+          "facts": [
+            "Confirmed fact #1 with inline source citation. [SOURCE]",
+            "Confirmed fact #2."
+          ],
+          "judgments": [
+            "Analyst judgment tied to fact #1. State confidence and what would change it. [CONF:MED]",
+            "Analyst judgment tied to fact #2."
+          ]
+        }
+      ]
+    },
+    {
+      "domainTitle": "Military Situation",
+      "items": [
+        {
+          "type": "h3",
+          "text": "Sub-topic Header"
+        },
+        {
+          "type": "claim",
+          "text": "REPLACE: Military development.",
+          "conf": "HIGH",
+          "sources": ["CENTCOM", "IDF"]
+        },
+        {
+          "_COMMENT": "Analyst callout box. Styles: info, analyst, warning, alert, t4, scope, purple",
+          "type": "callout",
+          "label": "ANALYST ASSESSMENT: TOPIC [CONF: MED]",
+          "style": "analyst",
+          "text": [
+            "First paragraph of analyst assessment.",
+            "",
+            "Second paragraph. State what would change this assessment."
+          ]
+        }
+      ]
+    },
+    {
+      "domainTitle": "Infrastructure, Markets & Travel Risk",
+      "items": [
+        {
+          "type": "h3",
+          "text": "Travel Risk"
+        },
+        {
+          "type": "claim",
+          "text": "REPLACE: Travel/infrastructure development.",
+          "conf": "HIGH",
+          "sources": []
+        }
+      ]
+    },
+    {
+      "domainTitle": "International Reactions",
+      "items": [
+        {
+          "type": "claim",
+          "text": "REPLACE: International reaction.",
+          "conf": "HIGH",
+          "sources": ["REUTERS"]
+        }
+      ]
+    }
+  ],
+
+  "scorecard": [
+    {
+      "_COMMENT": "8-12 rows max. Status vocabulary: CONFIRMED / NOT YET / BUILDING / CRITICAL / ELEVATED / UNKNOWN / ONGOING / HALTED",
+      "indicator": "Indicator name (what are we tracking?)",
+      "status":    "UNKNOWN",
+      "change":    "NEW",
+      "watch":     "What observable event would change this status?"
+    },
+    {
+      "indicator": "Military escalation scale",
+      "status":    "BUILDING",
+      "change":    "↑ ESCALATED",
+      "watch":     "Next confirmed strike or ceasefire signal"
+    },
+    {
+      "indicator": "Diplomatic off-ramp",
+      "status":    "UNKNOWN",
+      "change":    "UNCHANGED",
+      "watch":     "Back-channel contact confirmed or denied within 24 hrs"
+    },
+    {
+      "indicator": "Supply chain disruption",
+      "status":    "ELEVATED",
+      "change":    "NEW",
+      "watch":     "Port closure announcement or major carrier halt"
+    }
+  ],
+
+  "actions": {
+    "_COMMENT": "6-10 items per group max. Every action must be specific enough to execute and time-bounded. Omit a group entirely if no actions apply.",
+    "travel": [
+      "REPLACE: Specific travel action tied to a risk in the sections above. Implicit timeframe: next 24-48h.",
+      "Example: Suspend all travel to [region] immediately. Direct any staff in [region] to shelter in place and contact [contact]."
+    ],
+    "supplyChain": [
+      "REPLACE: Specific supply chain action.",
+      "Example: If procurement triggers set at $X/bbl, prepare to execute hedging. Contact logistics vendors before [market open]."
+    ],
+    "cyber": [
+      "REPLACE: Specific cyber action tied to threat actor or vector identified in sections above.",
+      "Example: Elevate monitoring for phishing and intrusion attempts. Brief finance/procurement staff on [specific fraud type] now."
+    ],
+    "comms": [
+      "REPLACE: Specific communications or leadership action.",
+      "Example: Brief board/risk committee within next business day. Prepare holding statement if organization has exposure to [issue]."
+    ]
+  },
+
+  "parallel": {
+    "_COMMENT": "Optional parallel developments section. Set notApplicable:true to render a placeholder, or fill title/rationale/items.",
+    "notApplicable": true
+  },
+
+  "sourcesAppendix": {
+    "_COMMENT": "List all sources used, by tier. Omit a tier block if none used.",
+    "t1": [
+      "REPLACE: Official statement or primary source — date range"
+    ],
+    "t2": [
+      "REPLACE: Reuters, AP, CNN, [other T2 outlets] — live updates and breaking news coverage"
+    ],
+    "t3": [
+      "REPLACE: CSIS, CFR, [think-tank] — specific report or dispatch"
+    ],
+    "t4": [
+      "REPLACE: [Channel/account] — specific claim (CONF:LOW); state information operations incentive"
+    ]
+  }
+}

@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ThreatWatch: Iran Conflict Monitor</title>
+  <style>
+    :root {
+      --dark-blue: #1B3A5C;
+      --teal: #17627A;
+      --blue: #2E75B6;
+      --blue-bg: #D5E8F0;
+      --amber: #7F4F00;
+      --amber-bg: #FFF2CC;
+      --purple: #5C3A7A;
+      --paper: #ffffff;
+      --ink: #18212B;
+      --border: #d7dee6;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top right, rgba(46,117,182,0.16), transparent 28%),
+        linear-gradient(180deg, #eff5f8 0%, #ffffff 32%);
+    }
+    .page {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 22px;
+    }
+    .cover {
+      background: var(--dark-blue);
+      color: white;
+      border-radius: 22px;
+      padding: 28px;
+      box-shadow: 0 18px 40px rgba(24,33,43,0.12);
+    }
+    .eyebrow {
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-size: 12px;
+      opacity: 0.8;
+    }
+    h1 {
+      margin: 12px 0 8px;
+      font-size: clamp(2rem, 4vw, 3rem);
+    }
+    .meta, .links, .day-nav {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+    .pill, .day-nav button, .links a, select {
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 999px;
+      padding: 10px 14px;
+      background: rgba(255,255,255,0.1);
+      color: inherit;
+      text-decoration: none;
+      font-size: 14px;
+    }
+    select {
+      background: white;
+      color: var(--ink);
+      border-color: var(--border);
+      margin-top: 16px;
+    }
+    .day-nav button {
+      cursor: pointer;
+    }
+    .day-nav button.active {
+      background: white;
+      color: var(--dark-blue);
+      border-color: white;
+    }
+    h2 {
+      margin: 28px 0 14px;
+      color: var(--dark-blue);
+    }
+    .summary-grid, .actions-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+    .card, .table-wrap {
+      background: var(--paper);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: 0 12px 28px rgba(24,33,43,0.06);
+    }
+    .summary-card {
+      border-top: 6px solid var(--blue);
+    }
+    .summary-card.assessment { border-top-color: var(--purple); }
+    .summary-card.uncertainty { border-top-color: var(--amber); }
+    .summary-label {
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .table-wrap {
+      overflow: auto;
+      padding: 0;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 12px 14px;
+      text-align: left;
+      border-top: 1px solid #e6ebf1;
+      vertical-align: top;
+    }
+    th {
+      background: rgba(27,58,92,0.06);
+      color: var(--dark-blue);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 12px;
+    }
+    ul {
+      margin: 0;
+      padding-left: 18px;
+      display: grid;
+      gap: 10px;
+    }
+    .status {
+      display: inline-flex;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: var(--blue-bg);
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .status.elevated, .status.building { background: #FCE4D6; color: #C55A11; }
+    .status.pending, .status.unknown, .status.not-yet { background: var(--amber-bg); color: var(--amber); }
+    .status.critical { background: #FADADD; color: #C00000; }
+    .muted {
+      color: #5a6672;
+      font-size: 14px;
+    }
+    .empty {
+      padding: 18px;
+      border: 1px dashed var(--border);
+      border-radius: 18px;
+      color: #5a6672;
+      background: rgba(255,255,255,0.55);
+    }
+    @media (max-width: 767px) {
+      .page { padding: 16px; }
+      .summary-grid, .actions-grid { grid-template-columns: 1fr; }
+      th, td { padding: 10px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <section class="cover">
+      <div class="eyebrow">ThreatWatch AI</div>
+      <h1 id="title">Iran Conflict Monitor</h1>
+      <div class="meta" id="meta"></div>
+      <div class="links" id="links"></div>
+      <select id="datePicker" aria-label="Brief date picker"></select>
+      <div class="day-nav" id="dayNav"></div>
+    </section>
+
+    <h2>Executive Summary</h2>
+    <div class="summary-grid" id="summaryGrid"></div>
+
+    <h2>Scorecard</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Indicator</th>
+            <th>Status</th>
+            <th>Change</th>
+            <th>Watch</th>
+          </tr>
+        </thead>
+        <tbody id="scorecardBody"></tbody>
+      </table>
+    </div>
+
+    <h2>Recommended Actions</h2>
+    <div class="actions-grid" id="actionsGrid"></div>
+  </div>
+
+  <script>
+    const manifestUrl = "../output/json/manifest.json";
+    const state = { manifest: [], current: null };
+
+    function statusClass(value) {
+      return (value || "").toLowerCase().replace(/\s+/g, "-");
+    }
+
+    function labelFor(type) {
+      if (type === "fact") return "Fact";
+      if (type === "assessment") return "Assessment";
+      if (type === "uncertainty") return "Uncertainty";
+      return "Note";
+    }
+
+    function renderEmpty(target, text) {
+      target.innerHTML = `<div class="empty">${text}</div>`;
+    }
+
+    function renderMeta(entry, brief) {
+      const meta = document.getElementById("meta");
+      meta.innerHTML = [
+        brief.cfg.dayLabel,
+        brief.cfg.date,
+        brief.cfg.updateTime,
+        brief.cfg.classification
+      ].map(value => `<span class="pill">${value}</span>`).join("");
+
+      const links = document.getElementById("links");
+      links.innerHTML = `
+        <a href="${entry.html}" target="_blank" rel="noreferrer">View HTML</a>
+        <a href="${entry.pdf}" target="_blank" rel="noreferrer">Download PDF</a>
+        <a href="${entry.docx}" target="_blank" rel="noreferrer">Download DOCX</a>
+      `;
+    }
+
+    function renderSummary(brief) {
+      const grid = document.getElementById("summaryGrid");
+      if (!brief.execSummary || !brief.execSummary.length) {
+        renderEmpty(grid, "No executive summary available.");
+        return;
+      }
+      grid.innerHTML = brief.execSummary.map(item => `
+        <article class="card summary-card ${item.type || ""}">
+          <div class="summary-label">${labelFor(item.type)}</div>
+          <p>${item.text || ""}</p>
+          <div class="muted" style="margin-top:12px;">${item.conf ? `Confidence: ${item.conf}` : "Confidence: n/a"}</div>
+        </article>
+      `).join("");
+    }
+
+    function renderScorecard(brief) {
+      const body = document.getElementById("scorecardBody");
+      if (!brief.scorecard || !brief.scorecard.length) {
+        body.innerHTML = `<tr><td colspan="4">No scorecard rows available.</td></tr>`;
+        return;
+      }
+      body.innerHTML = brief.scorecard.map(row => `
+        <tr>
+          <td>${row.indicator || ""}</td>
+          <td><span class="status ${statusClass(row.status)}">${row.status || ""}</span></td>
+          <td>${row.change || ""}</td>
+          <td>${row.watch || ""}</td>
+        </tr>
+      `).join("");
+    }
+
+    function renderActions(brief) {
+      const grid = document.getElementById("actionsGrid");
+      const groups = [
+        ["Travel", brief.actions?.travel || []],
+        ["Supply Chain", brief.actions?.supplyChain || []],
+        ["Cyber", brief.actions?.cyber || []],
+        ["Comms", brief.actions?.comms || []]
+      ];
+      grid.innerHTML = groups.map(([label, rows]) => `
+        <section class="card">
+          <h3>${label}</h3>
+          <ul>${rows.map(row => `<li>${row}</li>`).join("")}</ul>
+        </section>
+      `).join("");
+    }
+
+    async function loadBrief(entry) {
+      const response = await fetch(entry.json);
+      if (!response.ok) throw new Error(`Failed to load ${entry.json}`);
+      const brief = await response.json();
+      state.current = brief;
+      document.getElementById("title").textContent = brief.cfg?.eventTitle || "ThreatWatch AI";
+      renderMeta(entry, brief);
+      renderSummary(brief);
+      renderScorecard(brief);
+      renderActions(brief);
+    }
+
+    function renderPicker() {
+      const picker = document.getElementById("datePicker");
+      picker.innerHTML = state.manifest.map(entry => `
+        <option value="${entry.date}">${entry.date} — ${entry.dayLabel || ""}</option>
+      `).join("");
+      picker.onchange = () => {
+        const entry = state.manifest.find(item => item.date === picker.value);
+        if (entry) loadBrief(entry);
+        renderDayNav(entry?.date || "");
+      };
+    }
+
+    function renderDayNav(activeDate) {
+      const nav = document.getElementById("dayNav");
+      nav.innerHTML = state.manifest.slice(0, 7).map(entry => `
+        <button class="${entry.date === activeDate ? "active" : ""}" data-date="${entry.date}">${entry.date}</button>
+      `).join("");
+      nav.querySelectorAll("button").forEach(button => {
+        button.onclick = () => {
+          const entry = state.manifest.find(item => item.date === button.dataset.date);
+          document.getElementById("datePicker").value = button.dataset.date;
+          renderDayNav(button.dataset.date);
+          if (entry) loadBrief(entry);
+        };
+      });
+    }
+
+    async function init() {
+      const summaryGrid = document.getElementById("summaryGrid");
+      renderEmpty(summaryGrid, "Loading latest brief...");
+      try {
+        const response = await fetch(manifestUrl);
+        if (!response.ok) throw new Error("Manifest unavailable");
+        const manifest = await response.json();
+        state.manifest = manifest.briefs || [];
+        if (!state.manifest.length) {
+          renderEmpty(summaryGrid, "No briefs are available yet. Run the pipeline first.");
+          return;
+        }
+        renderPicker();
+        const latest = state.manifest[0];
+        document.getElementById("datePicker").value = latest.date;
+        renderDayNav(latest.date);
+        await loadBrief(latest);
+      } catch (error) {
+        renderEmpty(summaryGrid, `Dashboard load failed: ${error.message}`);
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>
