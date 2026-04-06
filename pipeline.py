@@ -158,21 +158,13 @@ def deliver_brief(run_date, brief_path: Path, pdf_path: Path) -> None:
             LOGGER.error("Delivery failed for %s: %s", client.get("id", "UNKNOWN"), exc)
 
 
-def brandon_alert_address(settings: dict[str, str]) -> str | None:
-    smtp_user = settings["user"] or settings["legacy_user"]
-    if smtp_user and "@" in smtp_user:
-        return f"brandonwagener@{smtp_user.split('@', 1)[1]}"
-    if settings["alert_to"]:
-        return settings["alert_to"]
-    from_addr = parseaddr(settings["from"])[1]
-    if from_addr and "@" in from_addr:
-        return f"brandonwagener@{from_addr.split('@', 1)[1]}"
-    return None
+def operator_alert_address(settings: dict[str, str]) -> str | None:
+    return settings["alert_to"] or None
 
 
 def send_qc_failure_alert(run_date, report: dict) -> None:
     settings = smtp_settings()
-    alert_to = brandon_alert_address(settings)
+    alert_to = operator_alert_address(settings)
     password = settings["password"] or settings["legacy_password"]
     if not alert_to or not password:
         LOGGER.warning("QC failure alert skipped; SMTP details incomplete.")
@@ -206,10 +198,10 @@ def ensure_env_placeholders() -> None:
 # Fill these with a Gmail account that has 2FA enabled and an App Password configured.
 SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
-SMTP_USER=threatwatch@wagenerframeworks.com
+SMTP_USER=you@yourdomain.com
 SMTP_PASS=
-SMTP_FROM=ThreatWatch AI <threatwatch@wagenerframeworks.com>
-SMTP_REPLY_TO=threatwatch@wagenerframeworks.com
+SMTP_FROM=ThreatWatch AI <you@yourdomain.com>
+SMTP_REPLY_TO=you@yourdomain.com
 """.rstrip()
     SHARED_ENV_PATH.write_text(existing.rstrip() + block + "\n")
 
@@ -256,7 +248,7 @@ def pipeline(run_date, deliver: bool = False, dry_run: bool = False) -> int:
     qc_exit, report = run_qc(run_date, brief_path=brief_path)
 
     if qc_exit != 0:
-        LOGGER.error("QC failed. Alerting Brandon and halting delivery.")
+        LOGGER.error("QC failed. Sending QC alert and halting delivery.")
         send_qc_failure_alert(run_date, report)
         return 1
 
